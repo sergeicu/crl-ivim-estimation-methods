@@ -1,0 +1,58 @@
+# GCC makefile for Fast 2D Gaussian Convolution with Recursive Filtering demo
+# Pascal Getreuer 
+# November 12, 2011
+
+#
+# Uncomment and edit the following lines for JPEG support.
+#
+#LIBJPEG_DIR     = "D:/libs/jpeg-8b"
+#LIBJPEG_INCLUDE = -I$(LIBJPEG_DIR)
+#LIBJPEG_LIB     = $(LIBJPEG_DIR)/libjpeg.lib
+
+#
+# Uncomment and edit the following lines for PNG support.  
+#
+#ZLIB_DIR     = "D:/libs/zlib"
+#ZLIB_INCLUDE = -I$(ZLIB_DIR)
+#ZLIB_LIB     = $(ZLIB_DIR)/zlib.lib
+#LIBPNG_DIR     = "D:/libs/lpng143"
+#LIBPNG_INCLUDE = -I$(LIBPNG_DIR)
+#LIBPNG_LIB     = $(LIBPNG_DIR)/libpng.lib
+
+##
+# Compiler settings
+CFLAGS=-O2 -W3 -D_CRT_SECURE_NO_WARNINGS \
+	$(LIBJPEG_INCLUDE) $(LIBPNG_INCLUDE) $(ZLIB_INCLUDE)
+LDFLAGS=-NODEFAULTLIB:libcmtd -NODEFAULTLIB:msvcrt \
+	$(LIBJPEG_LIB) $(LIBPNG_LIB) $(ZLIB_LIB)
+
+## 
+# These statements add compiler flags to define LIBJPEG_SUPPORT, etc.,
+# depending on which libraries have been specified above.
+!IFDEF LIBJPEG_LIB
+CJPEG=-DLIBJPEG_SUPPORT
+!ENDIF
+
+!IFDEF LIBPNG_LIB
+CPNG=-DLIBPNG_SUPPORT
+!ENDIF
+
+ALLCFLAGS=$(CFLAGS) $(CJPEG) $(CPNG)
+
+BLURDEMO_SOURCES=blurdemo.c gaussianiir2d.c imageio.c basic.c
+BLURDEMO_OBJECTS=$(BLURDEMO_SOURCES:.c=.obj)
+.SUFFIXES: .c .obj
+.PHONY: rebuild clean all
+
+rebuild: clean all
+
+clean:
+	del -f -q $(BLURDEMO_OBJECTS) blurdemo.exe
+
+all: blurdemo.exe
+
+blurdemo.exe: $(BLURDEMO_OBJECTS)
+	link $(LDFLAGS) $(BLURDEMO_OBJECTS) -out:$@
+
+.c.obj:
+	$(CC) -c $(ALLCFLAGS) -Tc $<

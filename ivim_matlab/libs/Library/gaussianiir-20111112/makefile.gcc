@@ -1,0 +1,78 @@
+# GCC makefile for Fast 2D Gaussian Convolution with Recursive Filtering demo
+# Pascal Getreuer 
+# November 12, 2011
+
+## 
+# The following three statements determine the build configuration.
+# For handling different image formats, the program can be linked with
+# the libjpeg, libpng, and libtiff libraries.  For each library, set
+# the flags needed for linking.  To disable use of a library, comment
+# its statement.  You can disable all three (BMP is always supported).
+LDLIBJPEG=-ljpeg
+LDLIBPNG=-lpng
+LDLIBTIFF=-ltiff
+
+##
+# Standard make settings
+SHELL=/bin/sh
+CFLAGS=-O3 -ansi -pedantic -Wall -Wextra 
+LDFLAGS=-lm $(LDLIBJPEG) $(LDLIBPNG) $(LDLIBTIFF)
+BLURDEMO_SOURCES=blurdemo.c gaussianiir2d.c imageio.c basic.c
+
+ARCHIVENAME=gaussianiir-$(shell date -u +%Y%m%d)
+SOURCES=gaussianiir1d.c gaussianiir1d.h gaussianiir1d.m \
+gaussianiir2d.c gaussianiir2d.h gaussianiir2d.m \
+gaussianiir3d.c gaussianiir3d.h gaussianiir3d.m \
+blurdemo.c imageio.c imageio.h basic.c basic.h makefile.gcc makefile.vc \
+doxygen.conf BSD_simplified.txt GPLv3.txt readme.txt
+
+## 
+# These statements add compiler flags to define LIBJPEG_SUPPORT, etc.,
+# depending on which libraries have been specified above.
+ifneq ($(LDLIBJPEG),)
+	CJPEG=-DLIBJPEG_SUPPORT
+endif
+ifneq ($(LDLIBPNG),)
+	CPNG=-DLIBPNG_SUPPORT
+endif
+ifneq ($(LDLIBTIFF),)
+	CTIFF=-DLIBTIFF_SUPPORT
+endif
+
+ALLCFLAGS=$(CFLAGS) $(CJPEG) $(CPNG) $(CTIFF)
+BLURDEMO_OBJECTS=$(BLURDEMO_SOURCES:.c=.o)
+.SUFFIXES: .c .o
+.PHONY: all clean rebuild srcdoc dist dist-zip
+
+all: blurdemo
+
+blurdemo: $(BLURDEMO_OBJECTS)
+	$(CC) $(LDFLAGS) $(BLURDEMO_OBJECTS) -o $@
+
+.c.o:
+	$(CC) -c $(ALLCFLAGS) $< -o $@
+
+clean:
+	$(RM) $(BLURDEMO_OBJECTS)  \
+	blurdemo
+
+rebuild: clean all
+
+# Source documentation with Doxygen
+srcdoc:
+	doxygen doxygen.conf
+
+dist: $(SOURCES)
+	-rm -rf $(ARCHIVENAME)
+	mkdir $(ARCHIVENAME)
+	ln $(SOURCES) $(ARCHIVENAME)
+	tar vchzf $(ARCHIVENAME).tar.gz $(ARCHIVENAME)
+	-rm -rf $(ARCHIVENAME)
+
+dist-zip: $(SOURCES)
+	-rm -rf $(ARCHIVENAME)
+	mkdir $(ARCHIVENAME)
+	ln $(SOURCES) $(ARCHIVENAME)
+	-rm $(ARCHIVENAME).zip
+	zip -r9 $(ARCHIVENAME).zip $(ARCHIVENAME)/*
+	-rm -rf $(ARCHIVENAME)
