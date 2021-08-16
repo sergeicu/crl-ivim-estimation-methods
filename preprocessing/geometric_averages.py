@@ -67,7 +67,8 @@ def process_dir(args,path):
     filepaths_type = 'relative' if args.noabsolute else 'absolute'
     
     # Create .txt files for processing geometric averages
-    write_bvalsFileNames(args,filepaths_type)
+    #write_bvalsFileNames(args,filepaths_type)
+    write_bvalsFileNames(path,filepaths_type)
 
     # Create geometric averages
     bvalfilenames = path+"bvalsFileNames.txt" 
@@ -158,6 +159,8 @@ def check_if_nifti(scandir):
 def write_bvalsFileNames(scandir,filepaths_type='absolute'): 
     """Creates a .txt file for performing geometric averaging operation"""
     
+
+
     # get filenames
     scandir = scandir + '/' if not scandir.endswith('/') else scandir 
     # fetch only the files that start with 'b'

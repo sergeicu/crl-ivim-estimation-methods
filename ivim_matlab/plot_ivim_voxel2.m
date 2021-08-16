@@ -1,21 +1,21 @@
-function process_ivim_whole_slice(bvalsFileNames_textfile, savedir, slice)
+function plot_ivim_voxel2(bvalsFileNames_textfile, x,y,z, scan, roi, bthresh)
 
-% Verbose 
-disp('Computing slice')
-disp(slice)
-disp('for')
-disp(bvalsFileNames_textfile)
-disp('with output saved to')
-disp(savedir)
+% set default parameters
+if nargin<5
+    scan = 'n/a';
+    roi= 'n/a';
+    bthresh = 150;
+elseif nargin < 6
+    roi= 'n/a';
+    bthresh = 150; 
+elseif nargin < 7
+    bthresh = 150; 
+end
+
 
 % import libraries 
 addpath(genpath('libs'))
 
-% check if given files exist 
-if ~exist(savedir, 'dir')
-    msg = 'Savedir does not exist. Please check inputs';
-    error(msg)
-end 
 if ~exist(bvalsFileNames_textfile, 'file')
     msg = 'bvalsFileNames does not exist. Please check inputs';
     error(msg)
@@ -25,15 +25,6 @@ if ~endsWith(bvalsFileNames_textfile, '.txt')
     error(msg)
 end 
 
-% check if user has write access to directory 
-fileName = savedir + "/empty.txt";
-[fid,errmsg] = fopen(fileName, 'w');
-if ~isempty(errmsg)&&strcmp(errmsg,'Permission denied') 
-    fprintf('\nError: You do not have write permission to the folder (%s).\nPlease ask the owner of the folder to grant you access or provide a different save location via savedir variable. \n',savedir);
-else
-    fclose(fid);
-    delete(fileName);
-end
 
 
 % read text file with image paths
@@ -55,77 +46,9 @@ for i=1:NumOfImages
    [bImages(:,:,:,i),sp,orig,~]=readVTK([bvalueImageFileNames{i}]); 
 end
 
+coords = [x,y,z];
+xopt=computeIVIM_plot2(bValsVec,squeeze(bImages(x,y,z,:)), coords, scan,roi, bthresh);
 
-% Initizalize output images
-imageSize=size(squeeze(bImages(:,:,:,1)));
-b0=zeros(imageSize);
-dstar=zeros(imageSize);
-adc=zeros(imageSize);
-f=zeros(imageSize);
-[nrows, ncols, nslice]=size(squeeze(bImages(:,:,:,1)));
-
-% check if total slice numberes match
-if slice>nslice
-        disp(slice)
-        disp(nslice)
-        msg = 'the slice number provided is larger than total number of slices';
-        error(msg)
-end 
-
-
-
-% init params
-nCores=7; 
-isML=0;
-
-% check if slice already been processed (and skip)
-S0_saved= [savedir, '/D_sl', num2str(slice), '.vtk']
-if exist(S0_saved, 'file')
-    disp('IPEK: WARNING: Output file for this slice already exist. Please delete/move the file and re-run the script if necessary')
-    disp(S0_saved)
-    disp('..exiting..')
-    %exit
-else
-
-% compute ivim parameters with matlab 
-%use parpool to allocate number of CPU's
-parfor row=1:nrows
-%for row=1:nrows 
-    disp(row)
-    for col=1:ncols
-        xopt=computeIVIM_silent(bValsVec,squeeze(bImages(row,col,slice,:)));
-        b0(row,col,slice)=xopt(1);
-        dstar(row,col,slice)=xopt(2);
-        adc(row,col,slice)=xopt(3);
-        f(row,col,slice)=xopt(4);        
-    end 
-end 
-
-
-% remove zeros and nans
-b0(isnan(b0))= 0;
-adc(isnan(adc))= 0;
-dstar(isnan(dstar))= 0;
-f(isnan(f))= 0;
-
-b0(isinf(b0))= 0;
-adc(isinf(adc))= 0;
-dstar(isinf(dstar))= 0;
-f(isinf(f))= 0;
-
-b0((b0<0))=0;
-adc((adc<0))=0;
-dstar((dstar<0))=0;
-f((f<0))=0;
-
-%save to file
-writeVTK(adc, [savedir, '/D_sl', num2str(slice), '.vtk']);
-writeVTK(b0, [savedir, '/S0_sl', num2str(slice),'.vtk']);
-writeVTK(dstar, [savedir, '/Dstar_sl', num2str(slice),'.vtk']);
-writeVTK(f, [savedir, '/f_sl', num2str(slice),'.vtk']);
-
-
-end
 
 
 function [adc,b0]=computeLinearADC(bvals, signal)

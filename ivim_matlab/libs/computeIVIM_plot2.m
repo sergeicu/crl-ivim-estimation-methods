@@ -1,17 +1,40 @@
-function xopt=computeIVIM_silent(bValsVec,signalVec)
+function xopt=computeIVIM_plot2(bValsVec,signalVec,coords,scan,roi, b_thresh)
 % output: xopt: IVIM params: So, Dper, Dd,f
 % Computes IVIM params using Nonlinear Least Squares, for the initialization, segmented least sqaures is used 
 % Initial IVIM parameter estimation using the method from the paper: "Comparison of Biexponential and Monoexponential 
 % Model of Diffusion Weighted Imaging in Evaluation of Renal Lesions,
 % Preliminary Experience", Investigative Radiology 2010.
 
-% signalVec=squeeze(bImages(row,col,slice,:));
+% coords 
+x = coords(1);
+y = coords(2);
+z = coords(3);
 
-b_thresh=150;
+% signalVec=squeeze(bImages(row,col,slice,:));
+if nargin < 4
+    scan = 'n/a';
+    roi = 'n/a';
+    b_thresh=150;
+elseif nargin < 5
+    roi = 'n/a';
+    b_thresh=150; 
+elseif nargin < 6    
+    b_thresh=150;
+end
+
+%{
+
+if nargin < 7 6
+    extra_info = extra_info
+else 
+    extra_info 
+end 
+%} 
+
 %b_thresh=250; % old - updated on 20210716
 linear_weights=ones(size(bValsVec));
 linear_weights2=linear_weights(bValsVec>b_thresh);
-% linear_weights2=linear_weights2/sum(linear_weights);
+linear_weights2=linear_weights2/sum(linear_weights);
 
 % inital fit of ADC and intercept b0 from higher b values
 signalVec=double(signalVec);
@@ -37,7 +60,7 @@ ln_s=log(initial_b0)-(initial_Dd).*st;
 meanSb0=mean(signalVec(in)*linear_weights(in));
 
 initial_f = (meanSb0-modelB5)/meanSb0;
-%%
+%% solve for paramters
 if initial_f<0
     initial_f=0;
     initial_per=0;
@@ -73,17 +96,17 @@ params_in(4) = initial_f;
 IVIMfunction=@(params,bValsVec)(params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
     + (1-params(4))* exp(-(bValsVec)*params(3))));
 S=IVIMfunction(params_in,bValsVec);
-% params_in(2)=0.0;
-% Sinit=IVIMfunction(params_in,bValsVec,M);
+%params_in(2)=0.0;
+%Sinit=IVIMfunction(params_in,bValsVec,M);
 
-% hold on, plot(st,Sinit(inso),'k')
+%hold on, plot(st,Sinit(inso),'k')
 
 params_init2=params_in;
-% opt.min_objective=@(params,bValsVec,M)sum((M-params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
+%opt.min_objective=@(params,bValsVec,M)sum((M-params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
 %     + (1-params(4))* exp(-(bValsVec)*params(3)))).^2);
-% params_out = fminsearch(@(params) opt.min_objective(params,bValsVec,M),params_init2)
-% Sf=IVIMfunction(params_out,bValsVec,M);
-% plot(st,(Sf(inso)),'g'), hold on,
+%params_out = fminsearch(@(params) opt.min_objective(params,bValsVec,M),params_init2)
+%Sf=IVIMfunction(params_out,bValsVec,M);
+%plot(st,(Sf(inso)),'g'), hold on,
 lowerBoundParams(1) = max(params_init2(1)*0.25,0.0);
 lowerBoundParams(2) = max(params_init2(2)*0.25,0.0);
 lowerBoundParams(3) = max(params_init2(3)*0.25,0.0);
@@ -103,8 +126,26 @@ opt.maxeval = 100;
 opt.fc = {};
 
 [xopt, fmin, isSuccessful] = nlopt_optimize(opt, params_init2);
+disp(xopt)
 S=IVIMfunction(xopt,bValsVec);
 
+
+%% plot
 % params_in(2)=0.0;
 % Sinit=IVIMfunction(params_in,bValsVec,M);
-%plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),hold on, plot(st,S(inso),'m')
+figure, plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),hold on, plot(st,S(inso),'g')
+legend('Signal','ADC', 'IVIM')
+scaninfo = ['Scan: ', scan];
+roiinfo = ['ROI: ', roi];
+disp(roi)
+voxelinfo = ['Voxel:', num2str(x), ':', num2str(y), ':', num2str(z)];  
+bthreshinfo = ['Bthresh:', num2str(b_thresh)];
+paramsinfo = ['Params:', num2str(round(xopt(1),0)), ',', num2str(round(xopt(3),4)), ',', num2str(round(xopt(2),3)), ',', num2str(round(xopt(4),2))];
+%title(scaninfo, voxelinfo, bthreshinfo);
+title([scaninfo, '   ', roiinfo], [voxelinfo, '   ', bthreshinfo, '   ', paramsinfo]);
+
+extra_info = '';
+if extra_info ~= '' | extra_info ~= ""
+    text(300,3,extra_info)
+end 
+%title(scaninfo, [voxelinfo, '   ', bthreshinfo]);

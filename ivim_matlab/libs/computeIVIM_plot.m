@@ -1,4 +1,4 @@
-function xopt=computeIVIM_silent(bValsVec,signalVec)
+function xopt=computeIVIM_plot(bValsVec,signalVec)
 % output: xopt: IVIM params: So, Dper, Dd,f
 % Computes IVIM params using Nonlinear Least Squares, for the initialization, segmented least sqaures is used 
 % Initial IVIM parameter estimation using the method from the paper: "Comparison of Biexponential and Monoexponential 
@@ -11,7 +11,7 @@ b_thresh=150;
 %b_thresh=250; % old - updated on 20210716
 linear_weights=ones(size(bValsVec));
 linear_weights2=linear_weights(bValsVec>b_thresh);
-% linear_weights2=linear_weights2/sum(linear_weights);
+linear_weights2=linear_weights2/sum(linear_weights);
 
 % inital fit of ADC and intercept b0 from higher b values
 signalVec=double(signalVec);
@@ -30,7 +30,7 @@ M=signalVec;
 [st,inso]=sort(t);
 shighb=(initial_b0)*exp(-initial_Dd.*st);
 ln_s=log(initial_b0)-(initial_Dd).*st;
-%figure, plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),%hold on, plot(st,ln_sx,'m')
+figure, plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),%hold on, plot(st,ln_sx,'m')
 
 
 [~,in]=min(bValsVec);
@@ -73,17 +73,17 @@ params_in(4) = initial_f;
 IVIMfunction=@(params,bValsVec)(params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
     + (1-params(4))* exp(-(bValsVec)*params(3))));
 S=IVIMfunction(params_in,bValsVec);
-% params_in(2)=0.0;
-% Sinit=IVIMfunction(params_in,bValsVec,M);
+params_in(2)=0.0;
+Sinit=IVIMfunction(params_in,bValsVec,M);
 
-% hold on, plot(st,Sinit(inso),'k')
+hold on, plot(st,Sinit(inso),'k')
 
 params_init2=params_in;
-% opt.min_objective=@(params,bValsVec,M)sum((M-params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
-%     + (1-params(4))* exp(-(bValsVec)*params(3)))).^2);
-% params_out = fminsearch(@(params) opt.min_objective(params,bValsVec,M),params_init2)
-% Sf=IVIMfunction(params_out,bValsVec,M);
-% plot(st,(Sf(inso)),'g'), hold on,
+opt.min_objective=@(params,bValsVec,M)sum((M-params(1)*(params(4)*exp(-(bValsVec)*(params(2)+params(3)))...
+     + (1-params(4))* exp(-(bValsVec)*params(3)))).^2);
+params_out = fminsearch(@(params) opt.min_objective(params,bValsVec,M),params_init2)
+Sf=IVIMfunction(params_out,bValsVec,M);
+plot(st,(Sf(inso)),'g'), hold on,
 lowerBoundParams(1) = max(params_init2(1)*0.25,0.0);
 lowerBoundParams(2) = max(params_init2(2)*0.25,0.0);
 lowerBoundParams(3) = max(params_init2(3)*0.25,0.0);
@@ -105,6 +105,6 @@ opt.fc = {};
 [xopt, fmin, isSuccessful] = nlopt_optimize(opt, params_init2);
 S=IVIMfunction(xopt,bValsVec);
 
-% params_in(2)=0.0;
-% Sinit=IVIMfunction(params_in,bValsVec,M);
-%plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),hold on, plot(st,S(inso),'m')
+params_in(2)=0.0;
+Sinit=IVIMfunction(params_in,bValsVec,M);
+plot(st,(M(inso)),'r'), hold on, plot(st,shighb,'b'),hold on, plot(st,S(inso),'m')

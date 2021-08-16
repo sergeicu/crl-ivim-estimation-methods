@@ -1,29 +1,24 @@
-This function has NOT yet been completed - please speak to Serge
+function plot_ivim_voxel(bvalsFileNames_textfile, x,y,z)
 
-
-function plot_ivim_voxel()
-
-% Define input variables
-bvalsFileNames_textfile=
-voxels=[]
-
-
+%{
 % Verbose 
 disp('Computing slice')
 disp(slice)
 disp('for')
 disp(bvalsFileNames_textfile)
-disp('with output saved to')
-disp(savedir)
+%disp('with output saved to')
+%disp(savedir)
+%}
+
 
 % import libraries 
 addpath(genpath('libs'))
 
 % check if given files exist 
-if ~exist(savedir, 'dir')
-    msg = 'Savedir does not exist. Please check inputs';
-    error(msg)
-end 
+%if ~exist(savedir, 'dir')
+%    msg = 'Savedir does not exist. Please check inputs';
+%    error(msg)
+%end 
 if ~exist(bvalsFileNames_textfile, 'file')
     msg = 'bvalsFileNames does not exist. Please check inputs';
     error(msg)
@@ -54,7 +49,7 @@ for i=1:NumOfImages
    [bImages(:,:,:,i),sp,orig,~]=readVTK([bvalueImageFileNames{i}]); 
 end
 
-
+%{
 % Initizalize output images
 imageSize=size(squeeze(bImages(:,:,:,1)));
 b0=zeros(imageSize);
@@ -70,44 +65,47 @@ if slice>nslice
         msg = 'the slice number provided is larger than total number of slices';
         error(msg)
 end 
-
+%}
 
 
 % init params
-nCores=7; 
-isML=0;
+%nCores=7; 
+%isML=0;
 
 % check if slice already been processed (and skip)
-S0_saved= [savedir, '/D_sl', num2str(slice), '.vtk']
-if exist(S0_saved, 'file')
-    disp('Output file for this slice already exist. Please delete/move the file and re-run the script if necessary')
-    disp(S0_saved)
-    disp('..exiting..')
-    exit
-else
+%S0_saved= [savedir, '/D_sl', num2str(slice), '.vtk']
+%if exist(S0_saved, 'file')
+%    disp('Output file for this slice already exist. Please delete/move the file and re-run the script if necessary')
+%    disp(S0_saved)
+%    disp('..exiting..')
+%    %exit
+%else
 
 % compute ivim parameters with matlab 
-parfor row=1:nrows
-    for col=1:ncols
-        xopt=computeIVIM_silent(bValsVec,squeeze(bImages(row,col,slice,:)));
-        b0(row,col,slice)=xopt(1);
-        dstar(row,col,slice)=xopt(2);
-        adc(row,col,slice)=xopt(3);
-        f(row,col,slice)=xopt(4);        
-    end 
-end 
+%use parpool to allocate number of CPU's
+%parfor row=1:nrows
+%for row=1:nrows 
+%    %disp(row)
+%    for col=1:ncols
+        xopt=computeIVIM_plot(bValsVec,squeeze(bImages(x,y,z,:)));
+%        b0(row,col,slice)=xopt(1);
+%        dstar(row,col,slice)=xopt(2);
+%        adc(row,col,slice)=xopt(3);
+%        f(row,col,slice)=xopt(4);        
+%    end 
+%end 
 
-
+%{
 % remove zeros and nans
-b0(isnan(b0))= 0;
-adc(isnan(adc))= 0;
-dstar(isnan(dstar))= 0;
-f(isnan(f))= 0;
+%b0(isnan(b0))= 0;
+%adc(isnan(adc))= 0;
+%dstar(isnan(dstar))= 0;
+%f(isnan(f))= 0;
 
-b0(isinf(b0))= 0;
-adc(isinf(adc))= 0;
-dstar(isinf(dstar))= 0;
-f(isinf(f))= 0;
+%b0(isinf(b0))= 0;
+%adc(isinf(adc))= 0;
+%dstar(isinf(dstar))= 0;
+%f(isinf(f))= 0;
 
 b0((b0<0))=0;
 adc((adc<0))=0;
@@ -120,8 +118,8 @@ writeVTK(b0, [savedir, '/S0_sl', num2str(slice),'.vtk']);
 writeVTK(dstar, [savedir, '/Dstar_sl', num2str(slice),'.vtk']);
 writeVTK(f, [savedir, '/f_sl', num2str(slice),'.vtk']);
 
-
-end
+%}
+%end
 
 
 function [adc,b0]=computeLinearADC(bvals, signal)

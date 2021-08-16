@@ -14,6 +14,7 @@ Usage:
 import os 
 import glob 
 import sys
+import argparse 
 
 import numpy as np 
 import nrrd 
@@ -61,7 +62,7 @@ def process_dir(args,path):
     process_b0_image(b0path, maskname = 'mask.nrrd', masktype='improved')
     
     
-def process_b0_image(b0path, maskname = 'mask.nrrd', masktype=masktype):
+def process_b0_image(b0path, maskname = 'mask.nrrd', masktype="improved"):
     """Given a b0 image, create a mask"""
     
 
