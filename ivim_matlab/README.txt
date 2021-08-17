@@ -1,5 +1,5 @@
 To process one slice inside matlab: 
-- serge_ivim_whole_slice.m
+- process_ivim_whole_slice.m
 
 To process multiple slices (via a CRL server and without entering matlab manually):
 - process_ivim_multiple_slices.sh
