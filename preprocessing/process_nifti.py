@@ -10,7 +10,8 @@
     e.g. b50#_2.nii.gz - where 50 refers to b-value and 2 refers to direction.
         
     Usage: 
-        python fixing_nifti.py -f <filepath> -d <# of diffusion directions>
+        python process_nifti.py -f <full_path_to_.nii_file> 
+        python process_nifti.py -f <full path to .nii file> -d <# of diffusion directions, default = 6>
     
 """
 
