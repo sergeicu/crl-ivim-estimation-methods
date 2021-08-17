@@ -60,8 +60,9 @@ end
 imageSize=size(squeeze(bImages(:,:,:,1)));
 b0=zeros(imageSize);
 dstar=zeros(imageSize);
-adc=zeros(imageSize);
+d=zeros(imageSize);
 f=zeros(imageSize);
+adc=zeros(imageSize);
 [nrows, ncols, nslice]=size(squeeze(bImages(:,:,:,1)));
 
 % check if total slice numberes match
@@ -96,33 +97,43 @@ parfor row=1:nrows
         xopt=computeIVIM_silent(bValsVec,squeeze(bImages(row,col,slice,:)));
         b0(row,col,slice)=xopt(1);
         dstar(row,col,slice)=xopt(2);
-        adc(row,col,slice)=xopt(3);
+        d(row,col,slice)=xopt(3);
         f(row,col,slice)=xopt(4);        
+        
+        % compute linear ADC 
+        [adc_voxel,b0_unused]=computeLinearADC(bValsVec, squeeze(bImages(row,col,slice,:)))
+        adc(row,col,slice)=adc_voxel;
+        
     end 
 end 
 
 
 % remove zeros and nans
 b0(isnan(b0))= 0;
-adc(isnan(adc))= 0;
+d(isnan(d))= 0;
 dstar(isnan(dstar))= 0;
 f(isnan(f))= 0;
+adc(isnan(adc))= 0;
 
 b0(isinf(b0))= 0;
-adc(isinf(adc))= 0;
+d(isinf(d))= 0;
 dstar(isinf(dstar))= 0;
 f(isinf(f))= 0;
+adc(isinf(adc))= 0;
+
 
 b0((b0<0))=0;
-adc((adc<0))=0;
+d((d<0))=0;
 dstar((dstar<0))=0;
 f((f<0))=0;
+adc((adc<0))=0;
 
 %save to file
-writeVTK(adc, [savedir, '/D_sl', num2str(slice), '.vtk']);
+writeVTK(d, [savedir, '/D_sl', num2str(slice), '.vtk']);
 writeVTK(b0, [savedir, '/S0_sl', num2str(slice),'.vtk']);
 writeVTK(dstar, [savedir, '/Dstar_sl', num2str(slice),'.vtk']);
 writeVTK(f, [savedir, '/f_sl', num2str(slice),'.vtk']);
+writeVTK(adc, [savedir, '/adc_sl', num2str(slice),'.vtk']);
 
 
 end
