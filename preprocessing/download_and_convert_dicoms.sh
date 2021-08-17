@@ -11,7 +11,7 @@ scandir=
 cd $savedir
 niidir=$scandir/nii
 mkdir $scandir/nii
-/opt/el7/pkgs/dcm2niix/dcm2niix -o nii/$scandir  $scandir
+/opt/el7/pkgs/dcm2niix/dcm2niix -o $scandir/nii/  $scandir
 
 # Step 3 - check .bval files in each newly created `niidir` and correct the values manually if necessary [e.g. the new scanner labels all bvalues less than '50', as '0' in the .bval file and this needs to be corrected manually at this stage]
 cat $(ls ${scandir}/nii/*.bval) 
