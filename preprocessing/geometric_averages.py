@@ -12,6 +12,8 @@
     
         python geometric_averages.py --d <directory path(s)> 
         python geometric_averages.py --d <directory path(s)> --noabsolute
+        
+    Note: directory path is the path to directory that contains these files: b0#_0.nii.gz, b0#_1.nii.gz, .. b50#_5.nii.gz,..
 
 
 """
