@@ -81,7 +81,7 @@ isML=0;
 % check if slice already been processed (and skip)
 S0_saved= [savedir, '/D_sl', num2str(slice), '.vtk']
 if exist(S0_saved, 'file')
-    disp('IPEK: WARNING: Output file for this slice already exist. Please delete/move the file and re-run the script if necessary')
+    disp('WARNING: Output file for this slice already exist. Please delete/move the file and re-run the script if necessary')
     disp(S0_saved)
     disp('..exiting..')
     %exit
