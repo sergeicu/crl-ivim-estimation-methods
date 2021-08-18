@@ -67,6 +67,7 @@ def process_dir(args,path):
     
     # check how to save bval filepaths 
     filepaths_type = 'relative' if args.noabsolute else 'absolute'
+    extension = '.vtk'
     
     # Create .txt files for processing geometric averages
     #write_bvalsFileNames(args,filepaths_type)
@@ -83,7 +84,7 @@ def process_dir(args,path):
     
     # Save a .txt file with paths to geometrically averaged files
     bvals = get_bvals(outputdir)
-    savedir = write_bvalsFileNames_average(outputdir, bvals,filepaths_type)
+    savedir = write_bvalsFileNames_average(outputdir, bvals,extension, filepaths_type)
     
     print(f"Saved results to {savedir}")
     
