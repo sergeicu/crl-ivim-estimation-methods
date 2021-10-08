@@ -63,6 +63,9 @@ def process_dir(args,path):
     assert os.path.isdir(path), f"not a directory: {path}"
     path = path + "/"
     files = glob.glob(path + "*b[0-9]*#*[0-9].nii.gz")
+    if not files: 
+        # try with .nrrd
+        files = glob.glob(path + "*b[0-9]*#*[0-9].nrrd")    
     assert files, f"no files found of the correct format are not given in correct format - must be b0#_2.nii.gz and similar. Files found are {files}"
     
     # check how to save bval filepaths 
