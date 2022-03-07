@@ -3,28 +3,23 @@ A collection of libraries for estimation of IVIM parameters.
 Start with: 
 - preprocessing/README.txt 
 
-Next: 
+Then: 
 - choose a method to estimate IVIM
 
 The following types of processing are available: 
-- IVIM (BOBYQA) Matlab 
-- [tbc] IVIM (BOBYQA) C++ 
-- [tbc] SCIM (BOBYQA) C++ 
-- [tbc] DIPY
-- [tbc] 1D FCN (Barbieri et al., V1 implementation) 
-- [tbc] 2D CNN (Vasylechko et al.)
+- IVIM (BOBYQA) C++ 
+- SCIM (BOBYQA) C++ 
+- 1D FCN (Barbieri et al. 2020) 
 
+Also available: 
+- 2D CNN (Vasylechko et al.) - pre-trained model on abdominal DWI MRI for 7 b-values
+- IVIM (BOBYQA) Matlab 
+- DIPY
 
 ##############################
 Notes on IVIM estimation methods
 ##############################
 
-
-###
-DIPY 
-###
-- DIPY implementation is based on Jaume Coll Font's code (ex CRL member). Newer DIPY implementation may be available at this stage (see their github for updates). 
-- DIPY yields 'worse' results than CRL's IVIM (BOBYQA) voxelwise methods, as this is not a segmented fit.
 
 ###
 Matlab 
@@ -52,6 +47,12 @@ NOTES ON 1D FCN:
     - A newer 1D FCN network exists (V2) which has not yet been implemented yet. This work is tbc. 
 
 
+
+###
+DIPY 
+###
+- DIPY implementation is based on Jaume Coll Font's code (ex CRL member). Newer DIPY implementation may be available at this stage (see their github for updates). 
+- DIPY yields 'worse' results than CRL's IVIM (BOBYQA) voxelwise methods, as this is not a segmented fit.
 
 
 
