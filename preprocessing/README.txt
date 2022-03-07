@@ -12,16 +12,17 @@ Prepare files
 ### 
 Instructions
 ###
-1. download_and_convert_dicoms.sh - open this file and run according to instructions
-2. process_nifti.py -f <NIFTI>
-3. geometric_averages.py -d <DIRECTORY>
-4. create_masks.py -d <DIRECTORY>
+1. download_and_convert_dicoms.sh - fetch dicoms from BCH scanner. Ignore if nrrd/nifti files already available. To run - open this file and run according to instructions. 
+2. process_nifti.py -f <NIFTI> - 
+3. geometric_averages.py -d <DIRECTORY> - geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run. 
+4. create_masks.py -d <DIRECTORY> - create automatic mask of the abdomen or brain. If using custom mask - ignore this script. 
 
 Read header of each .py file if need more information
 
 ###
 Helper tools 
 ###
-- [tbc] x2y.py - convert one file format to another for entire folder 
-- [tbc] create_mask.py - create mask for a specific file 
-- [tbc] fix_bval_file.py - fixes .bval file if certain low bvalues were set to zero according a .dvs file
+- x2y.py - convert one file format to another for entire folder 
+- create_mask.py - create mask for a specific file 
+- fix_bval_file.py - fixes .bval file if certain low bvalues were set to zero according a .dvs file
+- svtools.py - helper tools - e.g. file conversion and execution of bash commands.
