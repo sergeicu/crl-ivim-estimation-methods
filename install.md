@@ -23,8 +23,14 @@ NB requirements.txt is a file inside this repository
 
 ## Check if certain CRL tools are available 
 
-Run inside terminal: 
+Try to run these commands inside Terminal to check if they are available to you: 
 
-- `which crlConvertBetweenFileFormats` or `/opt/el7/pkgs/crkit/2021/crkit-master/bin/crlConvertBetweenFileFormats`
-- `which dcm2niix` or `/opt/el7/pkgs/dcm2niix/dcm2niix` 
+- `crlConvertBetweenFileFormats`
+- `dcm2niix` 
+- `averageBVals` 
 
+If either binary is not available then export them inside Terminal like this: 
+
+PATH=$PATH:/opt/el7/pkgs/crkit/2021/crkit-master/bin/:/opt/el7/pkgs/dcm2niix/dcm2niix:/fileserver/abd/bin/
+
+and check again if either works 
