@@ -1,10 +1,10 @@
 A collection of libraries for estimation of IVIM parameters. 
 
 Start with: 
-- preprocessing/README.txt 
+- preprocessing/README.md
 
 Then: 
-- choose a method to estimate IVIM
+- estimate/README.md 
 
 The following types of processing are available: 
 - IVIM (BOBYQA) C++ 
@@ -18,7 +18,7 @@ Also available:
 
 # Install: 
 
-Check `install.md` file and `preprocessing/README.md` 
+Read `install.md`. 
 
 
 # Notes on IVIM estimation methods 
