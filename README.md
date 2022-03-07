@@ -16,7 +16,7 @@ Also available:
 - IVIM (BOBYQA) Matlab 
 - DIPY
 
-# Install: 
+# Install
 
 Read `install.md`. 
 
