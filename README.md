@@ -16,6 +16,10 @@ Also available:
 - IVIM (BOBYQA) Matlab 
 - DIPY
 
+# Install: 
+
+Check `install.md` file and `preprocessing/README.md` 
+
 
 # Notes on IVIM estimation methods 
 
