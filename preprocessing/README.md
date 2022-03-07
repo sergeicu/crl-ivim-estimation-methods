@@ -6,13 +6,30 @@
 4. create_masks.py
 
 
-## In detail
+## Quick info 
 
-1. download_and_convert_dicoms.sh - fetch dicoms from BCH scanner. Ignore if nrrd/nifti files already available. To run - open this file and run according to instructions. 
-2. process_nifti.py -f <NIFTI> - Convert a 4D diffusion mosaic file (in nifti format) into individual 3D files. Required for all IVIM methods to run. 4D diffusion mosaic is an output of DCM2NIIX conversion process (i.e. output of download_and_convert_dicoms.sh step) 
-3. geometric_averages.py -d <DIRECTORY> - geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run. 
-4. create_masks.py -d <DIRECTORY> - create automatic mask of the abdomen or brain. If using custom mask - ignore this script. 
+### download_and_convert_dicoms.sh
 
+Fetch dicoms from BCH scanner.  
+Ignore this if data is available in nrrd or nifti format already.  
+To run - open this file and run according to instructions. 
+
+### process_nifti.py 
+Convert a 4D diffusion mosaic file (in nifti format) into individual 3D files.   
+Required for all IVIM methods to run. 4D diffusion mosaic is an output of DCM2NIIX conversion process (i.e. output of download_and_convert_dicoms.sh step)   
+
+`python process_nifti.py -f <NIFTI>`
+
+  
+### geometric_averages.py -d <DIRECTORY> 
+Geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run. 
+### create_masks.py -d <DIRECTORY>
+  
+Create automatic mask of the abdomen or brain. If using custom mask - ignore this script. 
+  
+`python create_masks.py -d <DIRECTORY>`  
+
+## Notes  
 Read header of each .py file if need more information
 
 ## Helper tools 
