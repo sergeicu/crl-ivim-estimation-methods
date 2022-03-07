@@ -21,4 +21,10 @@ Activate:
 
 NB requirements.txt is a file inside this repository 
 
+## Check if certain CRL tools are available 
+
+Run inside terminal: 
+
+- `which crlConvertBetweenFileFormats` or `/opt/el7/pkgs/crkit/2021/crkit-master/bin/crlConvertBetweenFileFormats`
+- 
 
