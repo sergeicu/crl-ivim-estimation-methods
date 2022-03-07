@@ -47,9 +47,9 @@ NOTES ON 1D FCN:
 
 
 
-##############################################################################
-IGNORE: Serge's notes 
-##############################################################################
+
+## IGNORE: Serge's notes 
+
 
 7. [not used] run_dipy.py 
 8. run_bobyqa.py or run_bobyqa_7bvalues.py and/or run_bobyqa_SCIM.py or run_bobyqa_SCIM_7bvalues.py
