@@ -1,8 +1,4 @@
-ORDER OF PROCESSING: 
-
-
-
-## Prepare files
+## Processing steps
 
 1. download_and_convert_dicoms.sh 
 2. process_nifti.py 
