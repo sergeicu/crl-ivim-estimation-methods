@@ -1,0 +1,3 @@
+[submodule "svtools"]
+	path = svtools
+	url = https://github.com/sergeicu/svtools.git
