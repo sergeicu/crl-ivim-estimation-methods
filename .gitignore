@@ -1,3 +1,7 @@
+*.nrrd
+*.vtk
+*.nii.gz
 *.ipynb
 .ipynb_checkpoints
 archive
+example_data/
