@@ -155,7 +155,7 @@ def check_if_nifti(scandir):
         print("Files are in .nii.gz format. Converting to .nrrd....")
         for f in files: 
             if not os.path.exists(f.replace(".nii.gz", ".nrrd")):
-                sv.crl_convert_format(f, ".nrrd")
+                sv.svconvert(f,".nrrd", verbose=False)
         files = [f.replace(".nii.gz", ".nrrd") for f in files]
 
     assert files, f"No .nrrd files are found of the correct format in this directory. Files must be b0#_1.nrrd format. Check your files here: {scandir}"    
