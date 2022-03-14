@@ -1,3 +1,5 @@
+import subprocess
+
 # -----------
 # Execute in bash 
 # -----------
