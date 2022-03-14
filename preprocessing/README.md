@@ -12,7 +12,7 @@
 
 Fetch dicoms from BCH scanner.  
 Ignore this if data is available in nrrd or nifti format already.  
-To run - open this file and run according to instructions. 
+To run - open [the .sh file](download_and_convert_dicoms.sh) and run according to instructions. 
 
 ### process_nifti.py 
 Convert a 4D diffusion mosaic file (in nifti format) into individual 3D files.   
