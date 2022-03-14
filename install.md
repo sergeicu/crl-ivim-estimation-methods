@@ -37,4 +37,4 @@ Install them:
 
 - averageBVals - is available as a [docker image](https://github.com/sergeicu/scim_docker/) or as a centOS binary [here](https://github.com/sergeicu/scim_docker/tree/main/bin/3T). Important - you must modify `geometric_averages.py` to point to correct `averageBVals` binary. 
 
-Alternatively 
+
