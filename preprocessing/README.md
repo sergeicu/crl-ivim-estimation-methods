@@ -23,7 +23,9 @@ Required for all IVIM methods to run. 4D diffusion mosaic is an output of DCM2NI
   
 ### geometric_averages.py -d <DIRECTORY> 
 Geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run.   
-  
+
+  `python geometric_averages.py --d <directory path(s)> --noabsolute`
+
   
 ### create_masks.py -d <DIRECTORY>
   
