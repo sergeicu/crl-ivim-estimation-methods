@@ -19,8 +19,6 @@ Activate:
 
 `pip install -r requirements.txt`   
 
-NB requirements.txt is a file inside this repository 
-
 ## Check / install non python dependencies 
 
 Check if the following are available in your Terminal: 
