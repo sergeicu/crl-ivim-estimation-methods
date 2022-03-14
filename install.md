@@ -21,16 +21,15 @@ Activate:
 
 NB requirements.txt is a file inside this repository 
 
-## Check if certain CRL tools are available 
+## Check if certain additional tools are available 
 
-Try to run these commands inside Terminal to check if they are available to you: 
-
-- `crlConvertBetweenFileFormats`
+Check if the following are available in your Terminal: 
 - `dcm2niix` 
-- `averageBVals` 
+- `averageBVals`   
 
-If either binary is not available then export them inside Terminal like this: 
+DCM2niix - can be downloaded freely on the net or via conda - `conda install -c conda-forge dcm2niix`   
 
-PATH=$PATH:/opt/el7/pkgs/crkit/2021/crkit-master/bin/:/opt/el7/pkgs/dcm2niix/dcm2niix:/fileserver/abd/bin/
+averageBVals - is available as a [docker image](https://github.com/sergeicu/scim_docker/) or as a centOS binary [here](https://github.com/sergeicu/scim_docker/tree/main/bin/3T)  
 
-and check again if either works 
+Alternatively - export the binaries directly from CRL filesystem:   
+`PATH=$PATH:/opt/el7/pkgs/dcm2niix/dcm2niix:/fileserver/abd/bin/`
