@@ -22,7 +22,9 @@ Required for all IVIM methods to run. 4D diffusion mosaic is an output of DCM2NI
 
   
 ### geometric_averages.py -d <DIRECTORY> 
-Geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run. 
+Geometrically average multiple repetitions of each b-value. Required for all IVIM methods to run.   
+  
+  
 ### create_masks.py -d <DIRECTORY>
   
 Create automatic mask of the abdomen or brain. If using custom mask - ignore this script. 
@@ -32,9 +34,3 @@ Create automatic mask of the abdomen or brain. If using custom mask - ignore thi
 ## Notes  
 Read header of each .py file if need more information
 
-## Helper tools 
-
-- x2y.py - convert one file format to another for entire folder 
-- create_mask.py - create mask for a specific file 
-- fix_bval_file.py - fixes .bval file if certain low bvalues were set to zero according a .dvs file
-- svtools.py - helper tools - e.g. file conversion and execution of bash commands.
