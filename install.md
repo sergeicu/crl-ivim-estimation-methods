@@ -21,15 +21,22 @@ Activate:
 
 NB requirements.txt is a file inside this repository 
 
-## Check if certain additional tools are available 
+## Check / install non python dependencies 
 
 Check if the following are available in your Terminal: 
 - `dcm2niix` 
 - `averageBVals`   
 
-DCM2niix - can be downloaded freely on the net or via conda - `conda install -c conda-forge dcm2niix`   
+#### easy 
+If you have access to CRL filesystem - export the binaries directly:   
+`PATH=$PATH:/opt/el7/pkgs/dcm2niix/dcm2niix:/fileserver/abd/bin/`   
 
-averageBVals - is available as a [docker image](https://github.com/sergeicu/scim_docker/) or as a centOS binary [here](https://github.com/sergeicu/scim_docker/tree/main/bin/3T)  
+#### otherwise 
 
-Alternatively - export the binaries directly from CRL filesystem:   
-`PATH=$PATH:/opt/el7/pkgs/dcm2niix/dcm2niix:/fileserver/abd/bin/`
+Install them: 
+
+- DCM2niix - can be downloaded freely on the net or via conda - `conda install -c conda-forge dcm2niix`   
+
+- averageBVals - is available as a [docker image](https://github.com/sergeicu/scim_docker/) or as a centOS binary [here](https://github.com/sergeicu/scim_docker/tree/main/bin/3T). Important - you must modify `geometric_averages.py` to point to correct `averageBVals` binary. 
+
+Alternatively 
