@@ -1,4 +1,9 @@
 import subprocess
+import os 
+import nrrd 
+
+import SimpleITK as sitk
+
 
 # -----------
 # Execute in bash 
@@ -21,44 +26,38 @@ def execute(cmd,sudo=False):
 # File conversion 
 # -----------
 
-def crl_convert_format(image, format_out,dirout=None, verbose = True,debug=False): 
-    """
-    Python wrapper for crlConvertBetweenFileFormats that converts between .nrrd, .nii.gz, .vtk 
-    Args: 
-        image (str):      path to image 
-        format_out (str): enum to .nrrd, .vtk, .nii.gz, .nii
-        [dirout] (str):   convert into a specific directory 
-        [verbose] (str):  print the command being executed 
-    Returns: 
-        str: Path to converted file 
-    """    
-    """py wrapper for crlConvertBetweenFileFormats tool"""
-    
-    crlConvertFormat="/opt/el7/pkgs/crkit/2021/crkit-master/bin/crlConvertBetweenFileFormats"
-    
-    # explicitly search for the format_in (to avoid errors like before)
-    if image.endswith('.nii.gz'):
-        format_in = '.nii.gz'
-    elif image.endswith('.nii'):
-        format_in = '.nii'
-    elif image.endswith('.nrrd'):
-        format_in = '.nrrd'
-    elif image.endswith('.vtk'):
-        format_in = '.vtk'
-    else: 
-        print("FILE FORMAT IS WRONG")
-    if dirout: 
-        dirout = dirout+'/' if not dirout.endswith('/') else dirout
-        d,f = os.path.split(image)
-        imageout=dirout+f
+def svconvert(file,newformat, verbose=True, skip_existing=False):
+
+    """Convert between MRI formats: nrrd, nii, vtk"""
+
+    # check if format is correct 
+    formats=[".nrrd", ".nii.gz", ".nii", ".vtk"]
+    newformat = "." + newformat if not newformat.startswith(".") else newformat
+    assert newformat in formats, f"Incorrect conversion format: {newformat}. Only accept: {formats}"
+
+    # check file 
+    assert os.path.exists(file), f"File does not exist: {file}"
+
+    # output 
+    base, ext = os.path.splitext(file)
+    if ext == '.gz':
+        base = file.replace(".nii.gz", "")
+        ext = ".nii.gz"
+
+    # assert extension 
+    assert ext in formats, f"Incorrect extension fetched: {ext}. Allowed formats: {formats}"
+
+    # read 
+    img = sitk.ReadImage(file)
+
+    # write 
+    newfile=file.replace(ext, newformat)
+    if os.path.exists(newfile) and skip_existing:
+        print(f"File already exists, skipping")
     else:
-        imageout=image
-    #cmd = [crlConvertFormat, "-in", image, "-out", imageout.replace(format_in, format_out)]
-    cmd = [crlConvertFormat, image, imageout.replace(format_in, format_out)]
-    if debug: 
-        print(" ".join(cmd))
-    if verbose:
-        print(f"converting: {image} from {format_in} to {format_out}")
-    #subprocess.call(cmd,stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    execute(cmd)
-    return imageout.replace(format_in, format_out)
+        sitk.WriteImage(img,newfile)
+
+        if verbose:
+            print(f"Converted: {file} to {newformat}")
+        
+

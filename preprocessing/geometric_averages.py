@@ -122,7 +122,7 @@ def vtk2nrrd(outputdir):
     for file in files:
         
         if not os.path.exists(file.replace(".vtk", ".nrrd")):
-            sv.crl_convert_format(file,".nrrd")
+            sv.svconvert(file,".nrrd", verbose=False)
     
 
 
