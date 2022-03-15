@@ -1,0 +1,53 @@
+# Scim image 
+FROM sergeicu/scim:1_5T as scim_base 
+
+# Main image 
+FROM conda/miniconda3-centos7
+
+# Add labels 
+LABEL maintainer="serge.vasylechko@childrens.harvard.edu"
+LABEL vendor="QUIN"
+
+# Install dependencies via conda 
+COPY ./preprocessing /
+RUN conda create -y --name crl_ivim_estimation_tools python=3.8 
+RUN source activate crl_ivim_estimation_tools && \
+	conda install -c conda-forge dcm2niix && \
+	pip install -r /requirements.txt
+
+# Copy SCIM dependency binaries (geometric averaging)
+RUN mkdir -p /fileserver/abd/bin
+COPY --from=scim_base /scim/bin/averageBVals /fileserver/abd/bin/
+COPY --from=scim_base /opt/vtk /opt/vtk
+COPY --from=scim_base /opt/itk  /opt/itk 
+ENV PATH=/fileserver/abd/bin/:${PATH}
+
+
+# Set VTK and ITK dependency paths 
+ENV VTK_INSTALL_DIR=/opt/vtk
+ENV ITK_INSTALL_DIR=/opt/itk
+ENV LD_LIBRARY_PATH=${VTK_INSTALL_DIR}/lib:${ITK_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}
+
+# Add binaries to path 
+ENV PATH=/scim/bin:${PATH}
+
+
+# Publisher info
+ARG BUILD_DATE
+ARG VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="SCIM" \
+      org.label-schema.description="SCIM" \
+      org.label-schema.url="http://quin.med.harvard.edu" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="1.0"
+
+# Set work dir 
+WORKDIR /data
+
+# activate conda at start of container
+CMD source activate crl_ivim_estimation_tools && /bin/bash
+
+
+
+ 
