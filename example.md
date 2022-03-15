@@ -25,12 +25,12 @@ python geometric_averages.py --d $PWD --noabsolute
 cd example_data 
 
 # pull docker image
-version=latest
+version=miniconda
 image=sergeicu/scim_preprocessing:$version
 docker pull $image
 
 # enter docker 
-docker run -it --rm -v $PWD:/data/ $image /bin/bash 
+docker run -it --rm -v $PWD:/data/ $image 
 
 # process
 subject=f0944s1_1
